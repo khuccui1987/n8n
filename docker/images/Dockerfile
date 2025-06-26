@@ -7,7 +7,13 @@ USER root
 # 3. Cài các node cần thiết
 #RUN npm install n8n-nodes-zalos-user \
 #    && npm install n8n-nodes-debounce
-RUN n8n install n8n-nodes-zalos-user n8n-nodes-debounce
+#RUN n8n install n8n-nodes-zalos-user n8n-nodes-debounce
+
+# Cài node trực tiếp trong thư mục user mặc định của n8n
+RUN mkdir -p /home/node/.n8n && \
+    npm install --prefix /home/node/.n8n \
+      n8n-nodes-zalos-user \
+      n8n-nodes-debounce
 
 # 4. Trả lại quyền chạy cho user node
 #USER node
