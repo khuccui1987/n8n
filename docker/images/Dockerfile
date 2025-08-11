@@ -51,4 +51,3 @@ ENV NODE_ENV=production \
     NODE_OPTIONS="--max-old-space-size=512 --expose-gc"
 
 EXPOSE 5678
-CMD ["node", "--max-old-space-size=512", "node_modules/n8n/bin/n8n"]
