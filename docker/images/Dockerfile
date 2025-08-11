@@ -33,10 +33,11 @@
 FROM n8nio/n8n:1.105.4
 
 USER root
-# Cài thêm bash nếu cần, xóa file thừa để nhẹ hơn
 RUN apk add --no-cache bash \
     && npm prune --production \
-    && rm -rf /root/.npm /usr/local/lib/node_modules/npm /tmp/*
+    && rm -rf /root/.npm /tmp/*
+
+ENV PATH=/usr/local/bin:$PATH
 
 USER node
 WORKDIR /data
@@ -50,5 +51,4 @@ ENV NODE_ENV=production \
     NODE_OPTIONS="--max-old-space-size=512 --expose-gc"
 
 EXPOSE 5678
-
 CMD ["node", "--max-old-space-size=512", "node_modules/n8n/bin/n8n"]
