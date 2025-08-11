@@ -1,8 +1,8 @@
 # 1. Dùng official image
-FROM n8nio/n8n:latest
+#-FROM n8nio/n8n:latest
 
 # 2. Chuyển sang user root để cài node
-USER root
+#-USER root
 
 # 3. Cài các node cần thiết
 #RUN npm install n8n-nodes-zalos-user \
@@ -24,7 +24,31 @@ USER root
 #RUN npm install n8n-nodes-debounce n8n-nodes-zalos-user
 
 # 4. Trả lại quyền chạy cho user node
-USER node
+#-USER node
 
 # 5. Expose port
+#-EXPOSE 5678
+
+
+FROM n8nio/n8n:1.105.4
+
+USER root
+# Cài thêm bash nếu cần, xóa file thừa để nhẹ hơn
+RUN apk add --no-cache bash \
+    && npm prune --production \
+    && rm -rf /root/.npm /usr/local/lib/node_modules/npm /tmp/*
+
+USER node
+WORKDIR /data
+
+ENV NODE_ENV=production \
+    N8N_DIAGNOSTICS_ENABLED=false \
+    N8N_TELEMETRY_DISABLED=true \
+    N8N_LOG_LEVEL=warn \
+    EXECUTIONS_PROCESS=main \
+    N8N_CONCURRENCY=2 \
+    NODE_OPTIONS="--max-old-space-size=512 --expose-gc"
+
 EXPOSE 5678
+
+CMD ["node", "--max-old-space-size=512", "node_modules/n8n/bin/n8n"]
